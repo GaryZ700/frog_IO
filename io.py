@@ -10,6 +10,7 @@ grad = []
 energy = []
 ex_energy = []
 pos = []
+vel = []
 
 md = {}
 
@@ -113,6 +114,50 @@ def log():
 
 #End of main functions#####################################################################
 
+#begining of io functions
+
+def iAtoms():
+    data("coord")
+    return "atomsMasses",atoms
+
+def iCoord():
+    data("coord")
+    return pos,"None"
+
+def iVel():
+    return vel
+
+def iActiveState():
+    return "ActiveState"
+
+def iGradient(activestate):
+    data("grad")
+    return grad
+
+def iStateCoupled(statescoupled):
+    return "coupled states"
+
+def inacv(coupledstates):
+    return "nacv"
+
+def iMultiGradient(statescoupled):
+    return "multigradient"
+
+def isSH():
+    return "Surface hopping"
+
+def iTime():
+    return "time"
+
+def iTimestp():
+    return "timestep"
+
+
+#end of io functions
+
+
+
+
 #check if init should be run
 if(not os.path.isfile("mdMaster.json")):
     init()
@@ -123,7 +168,7 @@ if(not os.path.isfile("mdMaster.json")):
 data("coord")
 energy = data("energy")
 data("grad")
-
+#create log file
 log()
 
 print(atoms)
