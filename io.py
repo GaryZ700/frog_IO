@@ -1,4 +1,5 @@
 import os
+import json
 #import numpy as np
 
 #init global vars########################################################################
@@ -8,6 +9,9 @@ atoms = []
 grad = []
 energy = []
 ex_energy = []
+pos = []
+
+md = {}
 
 sp = "    "
 
@@ -49,13 +53,20 @@ def external_data(dtype,f):
     
         for line in f:
             atom = line.split("    ")[len(line.split("    "))-1].strip("\n")
+            
+            tempPos = line.split("    ")
+
             if(atom.count("$") == 0):
                 atoms.append(atom.strip(" "))
+                pos.append(tempPos[0] + tempPos[1] + tempPos[2])
+
+
+
        
 #reads data from inside of control file
 def internal_data():
     
-    return 0
+    return "Data inside control file"
 
 #finds location of specified data, and retrives it
 #dtype = type of data as string
@@ -72,9 +83,40 @@ def data(dtype):
         print("not in file")
         return internal_data()
 
+def init():
 
+    md["Time Step"] = "Can not find time step"
+    md["Surface Hopping"] = "surface"
+    md["Coupled"] =  "coupled"
+
+    with open("mdMaster.json","w") as out:
+        json.dump(md,out)
+
+
+#should be run after all datas
+def log():
+    md["Time "] = {} 
+    
+    md["Time "]["Energy"] = data("energy").split("\n")[0]
+
+    for atom in range(len(atoms)):
+
+        md["Time "][atoms[atom]] = {
+            
+            'Position': pos[atom],
+            'Gradient': grad[atom],
+            
+            }
+        
+    with open("mdlog.json","w") as out:
+        json.dump(md,out)
 
 #End of main functions#####################################################################
+
+#check if init should be run
+if(not os.path.isfile("mdMaster.json")):
+    init()
+
 
 
 
@@ -82,10 +124,12 @@ data("coord")
 energy = data("energy")
 data("grad")
 
+log()
 
 print(atoms)
 print(energy)
 print(grad)
 print(ex_energy)
+
 
 
