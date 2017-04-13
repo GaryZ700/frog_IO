@@ -5,6 +5,8 @@ import json
 #init global vars########################################################################
 
 atoms = []
+masses = {'c':21894.2, 'h':1837.29, 'o':21894.2}
+
 
 grad = []
 energy = []
@@ -118,7 +120,12 @@ def log():
 
 def iAtoms():
     data("coord")
-    return "atomsMasses",atoms
+    aumass = []
+
+    for atom in atoms:
+        aumass.append(masses[atom])
+    print(aumass)
+    return aumass,atoms
 
 def iCoord():
     data("coord")
@@ -165,9 +172,9 @@ if(not os.path.isfile("mdMaster.json")):
 
 
 
-data("coord")
-energy = data("energy")
-data("grad")
+#data("coord")
+#energy = data("energy")
+#data("grad")
 #create log file
 log()
 
@@ -175,6 +182,8 @@ print(atoms)
 print(energy)
 print(grad)
 print(ex_energy)
+
+print(iCoord())
 
 
 
